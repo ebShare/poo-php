@@ -2,7 +2,16 @@
 
 class Player
 {
-    public $level;
+    private $level;
+    public function getLevel():int{
+        return $this->level;
+    }
+    public function setLevel(int $level){
+        $this->level=$level;
+    }
+    public function __construct(int $level){
+        $this->level=$level;
+    }
 }
 class Encounter
 {
@@ -14,13 +23,13 @@ class Encounter
     {
         return 1 / (1 + (10 ** (($againstLevelPlayerTwo - $levelPlayerOne) / 400)));
     }
-    public static function setNewLevel(int &$levelPlayerOne, int $againstLevelPlayerTwo, int $playerOneResult)
+    public static function setNewLevel(Player &$PlayerOne, Player $PlayerTwo, int $playerOneResult)
     {
         if (!in_array($playerOneResult, self::RESULT_POSSIBILITIES)) {
             trigger_error(sprintf('Invalid result. Expected %s', implode(' or ', self::RESULT_POSSIBILITIES)));
         }
 
-        $levelPlayerOne += (int) (32 * ($playerOneResult - self::probabilityAgainst($levelPlayerOne, $againstLevelPlayerTwo)));
+        $PlayerOne->setLevel($PlayerOne->getLevel()+(int) (32 * ($playerOneResult - self::probabilityAgainst($PlayerOne->getLevel(), $PlayerTwo->getLevel()))));
     }
 }
 
@@ -28,24 +37,22 @@ class Encounter
 
 
 
-$greg = new Player;
-$greg->level = 400;
-$jade = new Player;
-$jade->level = 800;
+$greg = new Player(400);
+$jade = new Player(800);
 
 echo sprintf(
     'Greg à %.2f%% chance de gagner face a Jade',
-    Encounter::probabilityAgainst($greg->level, $jade->level) * 100
+    Encounter::probabilityAgainst($greg->getLevel(), $jade->getLevel()) * 100
 ) . PHP_EOL;
 
 // Imaginons que greg l'emporte tout de même.
-Encounter::setNewLevel($greg->level, $jade->level, Encounter::RESULT_WINNER);
-Encounter::setNewLevel($jade->level, $greg->level, Encounter::RESULT_LOSER);
+Encounter::setNewLevel($greg, $jade, Encounter::RESULT_WINNER);
+Encounter::setNewLevel($jade, $greg, Encounter::RESULT_LOSER);
 
 echo sprintf(
     'les niveaux des joueurs ont évolués vers %s pour Greg et %s pour Jade',
-    $greg->level,
-    $jade->level
+    $greg->getLevel(),
+    $jade->getLevel()
 );
 
 exit(0);
