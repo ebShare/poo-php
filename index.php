@@ -42,7 +42,7 @@ class Lobby
     }
 }
 
-class Player
+abstract class Player
 {
     protected $name;
     protected $ratio;
@@ -75,7 +75,7 @@ class Player
 }
 
 
-class QueuingPlayer extends Player{
+final class QueuingPlayer extends Player{
     protected $range;
     public function getRange()
     {
@@ -84,8 +84,8 @@ class QueuingPlayer extends Player{
 
 }
 
-$greg = new Player('greg', 400);
-$jade = new Player('jade', 476);
+$greg = new QueuingPlayer('greg', 400);
+$jade = new QueuingPlayer('jade', 476);
 
 $lobby = new Lobby();
 $lobby->addPlayers($greg, $jade);
