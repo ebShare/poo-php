@@ -84,6 +84,13 @@ final class QueuingPlayer extends Player{
 
 }
 
+class BlitzPlayer extends Player{
+    public function __construct($name, $ratio= 1200){
+
+    }
+}
+
+
 $greg = new QueuingPlayer('greg', 400);
 $jade = new QueuingPlayer('jade', 476);
 
